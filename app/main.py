@@ -8,7 +8,7 @@ def type_cmd(args):
     """Handles the 'type' command."""
 
     if args and args[0] in commands:
-        print(f'type {args[0]} is a shell builtin')
+        print(f'{args[0]} is a shell builtin')
     else:
         print(f"{' '.join(args)}: command not found")
 
@@ -20,8 +20,9 @@ commands = {'echo': echo,
 def run(user_input):
     """Parses and executes the appropriate command."""
     parts = user_input.strip().split()
+    # Ignore empty input
     if not parts:
-        return  # Ignore empty input
+        return  
 
     cmd, *args = parts
 
@@ -36,7 +37,7 @@ def run(user_input):
         print(f'{cmd}: command not found')
 
 def main():
-
+    """Main loop for command-line interaction."""
     while True:
         sys.stdout.write("$ ")
 
