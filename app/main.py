@@ -7,7 +7,7 @@ def echo(args):
 def type_cmd(args):
     """Handles the 'type' command."""
 
-    if args and args[0] in commands:
+    if (args and args[0] in commands) or args[0] == 'exit':
         print(f'{args[0]} is a shell builtin')
     else:
         print(f"{' '.join(args)}: command not found")
