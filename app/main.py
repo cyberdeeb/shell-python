@@ -1,3 +1,5 @@
+
+import os
 import sys
 
 def echo(args):
@@ -7,10 +9,18 @@ def echo(args):
 def type_cmd(args):
     """Handles the 'type' command."""
 
+    paths = os.getenv("PATH").split(":")
+
+
     if (args and args[0] in commands) or args[0] == 'exit':
         print(f'{args[0]} is a shell builtin')
     else:
         print(f"{' '.join(args)}: not found")
+        for path in paths:
+            if os.path.exists(f'{path}/{args[0]}'):
+                print
+
+
 
 # Command registry
 commands = {'echo': echo, 
