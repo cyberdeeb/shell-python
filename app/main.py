@@ -1,5 +1,6 @@
 
 import os
+import subprocess
 import sys
 
 def echo(args):
@@ -21,7 +22,30 @@ def type_cmd(args):
         else:
             print(f"{' '.join(args)}: not found")
 
+def execute(args):
 
+    paths = os.getenv("PATH").split(":")
+
+    for path in paths:
+        potential_path = f'{path}/{args[0]}'
+        if os.path.exists(potential_path):
+            program_path = potential_path
+            break
+    else:  # This runs only if the loop did NOT encounter a break
+        print(f"{' '.join(args)}: command not found")
+        return  # Exit the function if the program was not found
+    
+    if program_path is None:  # If the program was not found
+        print(f"{' '.join(args)}: not found")
+        return  # Exit if not found
+    
+    try:
+        # Run the program with its arguments
+        subprocess.run([program_path] + args[1:], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running {program_path}: {e}")
+    except FileNotFoundError:
+        print(f"Program not found: {program_path}")
 
 # Command registry
 commands = {'echo': echo, 
@@ -45,7 +69,8 @@ def run(user_input):
     if cmd_run:
         cmd_run(args)
     else:
-        print(f'{cmd}: command not found')
+        # If command is not found in registry, try to execute it
+        execute([cmd] + args)
 
 def main():
     """Main loop for command-line interaction."""
