@@ -17,6 +17,7 @@ def type_cmd(args):
         for path in paths:
             if os.path.exists(f'{path}/{args[0]}'):
                 print(f'{args[0]} is {path}/{args[0]}')
+                break
             else:
                 print(f"{' '.join(args)}: not found")
 
