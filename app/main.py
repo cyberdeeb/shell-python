@@ -11,14 +11,14 @@ def type_cmd(args):
 
     paths = os.getenv("PATH").split(":")
 
-
     if (args and args[0] in commands) or args[0] == 'exit':
         print(f'{args[0]} is a shell builtin')
     else:
-        print(f"{' '.join(args)}: not found")
         for path in paths:
             if os.path.exists(f'{path}/{args[0]}'):
-                print
+                print(f'{args[0]} is {path}/{args[0]}')
+            else:
+                print(f"{' '.join(args)}: not found")
 
 
 
