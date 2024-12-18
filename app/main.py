@@ -15,15 +15,17 @@ def type_cmd(args):
     if (args and args[0] in commands) or args[0] == 'exit':
         print(f'{args[0]} is a shell builtin')
     else:
+        # Search for program path in PATH
         for path in paths:
             if os.path.exists(f'{path}/{args[0]}'):
                 print(f'{args[0]} is {path}/{args[0]}')
                 break
+        # Executed if loop completes and no match
         else:
             print(f"{' '.join(args)}: not found")
 
 def execute(args):
-
+    """Handles program execution and not found errors"""
     paths = os.getenv("PATH").split(":")
 
     for path in paths:
@@ -59,8 +61,10 @@ def run(user_input):
     if not parts:
         return  
 
+    # Split command and arguments
     cmd, *args = parts
 
+    # Exit program
     if cmd == 'exit' and args == ['0']:
         sys.exit()
 
