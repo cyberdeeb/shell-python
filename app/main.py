@@ -7,6 +7,9 @@ def echo(args):
     """Handles the 'echo' command."""
     print(' '.join(args))
 
+def pwd(args):
+    print(os.getcwd())
+
 def type_cmd(args):
     """Handles the 'type' command."""
 
@@ -51,6 +54,7 @@ def execute(args):
 
 # Command registry
 commands = {'echo': echo, 
+            'pwd': pwd,
             'type': type_cmd
             }
     
