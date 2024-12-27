@@ -3,11 +3,24 @@ import os
 import subprocess
 import sys
 
+def cd(args):
+    """Handles the 'cd' command."""
+
+    directory = args[0]
+
+    if os.path.isdir(directory):
+        os.chdir(directory)
+    
+    else:
+        print(f'cd: {directory}: No such file or directory')
+
+
 def echo(args):
     """Handles the 'echo' command."""
     print(' '.join(args))
 
 def pwd(args):
+    """Handles the 'pwd' command."""
     print(os.getcwd())
 
 def type_cmd(args):
@@ -53,7 +66,8 @@ def execute(args):
         print(f"Program not found: {program_path}")
 
 # Command registry
-commands = {'echo': echo, 
+commands = {'cd' : cd,
+            'echo': echo, 
             'pwd': pwd,
             'type': type_cmd
             }
