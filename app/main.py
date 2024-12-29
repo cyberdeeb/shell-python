@@ -8,9 +8,13 @@ def cd(args):
 
     directory = args[0]
 
-    if os.path.isdir(directory):
+    # Handles cd to home directory
+    if directory == '~':
+        home = os.path.expanduser('~')
+        os.chdir(home)
+    # Handles input directory change
+    elif os.path.isdir(directory):
         os.chdir(directory)
-    
     else:
         print(f'cd: {directory}: No such file or directory')
 
