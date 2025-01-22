@@ -83,7 +83,7 @@ commands = {'cd' : cd,
 def run(user_input):
     """Parses and executes the appropriate command."""
     try:
-        # Use shlex to split the input correctly, respecting quotes
+        # Use shlex to split the input correctly
         parts = shlex.split(user_input)
     except ValueError as e:
         print(f'Error parsing input: {e}')
