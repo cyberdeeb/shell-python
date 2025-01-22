@@ -2,6 +2,7 @@
 import os
 import subprocess
 import sys
+import shlex
 
 def cd(args):
     """Handles the 'cd' command."""
@@ -61,9 +62,12 @@ def execute(args):
         print(f"{' '.join(args)}: not found")
         return  # Exit if not found
     
+    # Extract the basename of the program
+    program_basename = os.path.basename(program_path)
+    
     try:
         # Run the program with its arguments
-        subprocess.run([program_path] + args[1:], check=True)
+        subprocess.run([program_basename] + args[1:], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error running {program_path}: {e}")
     except FileNotFoundError:
@@ -78,7 +82,13 @@ commands = {'cd' : cd,
     
 def run(user_input):
     """Parses and executes the appropriate command."""
-    parts = user_input.strip().split()
+    try:
+        # Use shlex to split the input correctly, respecting quotes
+        parts = shlex.split(user_input)
+    except ValueError as e:
+        print(f'Error parsing input: {e}')
+        return
+    
     # Ignore empty input
     if not parts:
         return  
