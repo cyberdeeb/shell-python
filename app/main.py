@@ -82,22 +82,44 @@ commands = {'cd' : cd,
             }
     
 def run(user_input):
-    """Parses and executes the appropriate command."""
+    """Parses and executes the appropriate command with support for output redirection."""
     try:
-        # Use shlex to split the input correctly
         parts = shlex.split(user_input)
     except ValueError as e:
         print(f'Error parsing input: {e}')
         return
     
-    # Ignore empty input
     if not parts:
-        return  
+        return  # Ignore empty input
 
-    # Split command and arguments
+    # Handle redirection (>)
+    if ">" in parts or "1>" in parts:
+        try:
+            redir_index = parts.index(">") if ">" in parts else parts.index("1>")
+            command_part = parts[:redir_index]  # Command before ">"
+            output_file = parts[redir_index + 1]  # File after ">"
+        except IndexError:
+            print("Syntax error: No output file specified")
+            return
+
+        # Ensure the parent directory exists
+        output_dir = os.path.dirname(output_file)
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir)  # Create missing directories
+
+        # Open file for writing and redirect stdout
+        with open(output_file, "w") as f:
+            result = subprocess.run(command_part, stdout=f, stderr=subprocess.PIPE, text=True)
+            
+            # If there's an error, print it to stderr
+            if result.returncode != 0:
+                sys.stderr.write(result.stderr)
+                sys.stderr.flush()
+        return
+    
+    # Normal execution if no redirection
     cmd, *args = parts
 
-    # Exit program
     if cmd == 'exit' and args == ['0']:
         sys.exit()
 
@@ -106,8 +128,9 @@ def run(user_input):
     if cmd_run:
         cmd_run(args)
     else:
-        # If command is not found in registry, try to execute it
         execute([cmd] + args)
+
+
 
 def main():
     """Main loop for command-line interaction."""
